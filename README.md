@@ -4,7 +4,15 @@ Lisp dialect written in Python
 ## Installation
 
 ```bash
-sudo pip3 install liscript  # or just `pip'
+sudo pip install liscript
+# or #
+sudo pip3 install liscript
+```
+
+## Usage
+```bash
+lirepl            # open liscript repl
+lirun <filename>  # run liscript code
 ```
 
 ## Overview
