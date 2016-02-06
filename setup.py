@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='liscript',
-    version='0.0.1',
+    version='0.0.3',
     description='lisp dialect',
     url='https://github.com/KolesnichenkoDS/liscript',
     author='Daniil Kolesnichenko',
@@ -21,7 +21,7 @@ setup(
         'Programming Language :: Python :: 3.5',
     ],
 
-    packages=find_packages('liscript', 'liscript.*'),
+    packages=find_packages(),
 
     entry_points={
         'console_scripts': [
