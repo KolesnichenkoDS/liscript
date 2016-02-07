@@ -126,6 +126,14 @@ def require(args, scope):
             evaluate(expr, module_scope)
     return module_scope
     
+def if_(args, scope):
+    if args[0].value == '#t':
+        return eval_list(args[1], scope)
+    res = Atom('none')
+    for arg in args[2:]:
+        res = eval_list(arg, scope)
+    return res
+
 def case(args, scope):
     for cond, body in zip(args[::2], args[1::2]):
         if eval_list(cond, scope).value == '#t':
@@ -161,8 +169,9 @@ builtins = {
     '=': binop(operator.eq),
     '!=': binop(operator.ne),
     
-    'if': lambda args, scope: eval_list(args[1] if args[0].value == '#t' else args[2], scope),
-    'unless': lambda args, scope: eval_list(args[1] if args[0].value != '#t' else args[2], scope),
+    # 'if': lambda args, scope: eval_list(args[1] if args[0].value == '#t' else args[2], scope),
+    # 'unless': lambda args, scope: eval_list(args[1] if args[0].value != '#t' else args[2], scope),
+    'if': if_,
     'case': case,
     'otherwise': LazyList([Atom('->'), Atom('#t')]),
     
