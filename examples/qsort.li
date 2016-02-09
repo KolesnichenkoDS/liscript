@@ -1,0 +1,9 @@
+(def [qsort lst]
+     [if (< (length lst) 2)
+         [-> lst]
+         [let [less] (filter (partial > (head lst)) lst)]
+         [let [equal] (filter (partial = (head lst)) lst)]
+         [let [more] (filter (partial < (head lst)) lst)]
+         [+ (qsort less) equal (qsort more)]])
+
+(say (qsort '(1 3 5 7 2 4 6)))

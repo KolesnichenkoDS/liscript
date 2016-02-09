@@ -1,0 +1,12 @@
+(class [Just]
+       {:constructor (fn [self value] [set self [value] value])
+        :bind (fn [self fn] [fn (:value self)])})
+
+(class [Nothing] {:constructor (fn [self])
+                  :bind (fn [self fn] [-> self])})
+
+(let [m] (new Just 3))
+
+(chain m [:bind (fn [x] [new Just (* x x)])]
+         [:bind (fn [x] [new Just (+ x 1)])]
+         [:bind say])

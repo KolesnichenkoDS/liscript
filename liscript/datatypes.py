@@ -1,7 +1,7 @@
 from .scoping import *
 
 
-class XenData:
+class LispData:
     __slots__ = ('value', )
     
     def __init__(self, value):
@@ -32,12 +32,12 @@ class XenData:
         return '{0}(value={1})'.format(self.__class__.__name__, repr(self.value))
 
 
-class Atom(XenData):
+class Atom(LispData):
     def __str__(self):
         return self.value
 
 
-class Number(XenData):
+class Number(LispData):
     def __add__(self, other):
         return Number(self.value + other.value)
         
@@ -54,7 +54,7 @@ class Number(XenData):
         return str(self.value)
         
         
-class String(XenData):
+class String(LispData):
     def __add__(self, other):
         return String(self.value + other.value)
         
@@ -62,7 +62,7 @@ class String(XenData):
         return repr(self.value)
 
 
-class List(XenData):
+class List(LispData):
     def __add__(self, other):
         return List(self.value + other.value)
         
@@ -73,12 +73,12 @@ class List(XenData):
         return '({})'.format(' '.join(str(i) for i in self.value))
 
 
-class QExpr(XenData):
+class QExpr(LispData):
     def __str__(self):
         return '\'({})'.format(' '.join(str(i) for i in self.value))
 
 
-class QuotedList(XenData):
+class QuotedList(LispData):
     def __add__(self, other):
         return QuotedList(self.value + other.value)
     
@@ -89,7 +89,7 @@ class QuotedList(XenData):
         return '\'({})'.format(' '.join(str(i) for i in self.value))
 
 
-class LazyList(XenData):
+class LazyList(LispData):
     def __add__(self, other):
         return LazyList(self.value + other.value)
     
@@ -100,12 +100,12 @@ class LazyList(XenData):
         return '[{}]'.format(' '.join(str(i) for i in self.value))
 
 
-class DictExpr(XenData):
+class DictExpr(LispData):
     def __str__(self):
         return '{{{}}}'.format(' '.join(':' + key + ' ' + str(self.value[key]) for key in self.value.keys()))
 
 
-class Dict(XenData):
+class Dict(LispData):
     def __getitem__(self, key):
         return self.value[key]
     
@@ -116,14 +116,14 @@ class Dict(XenData):
         return '{{{}}}'.format(' '.join(':' + key + ' ' + str(self.value[key]) for key in self.value.keys()))
 
 
-class Class(XenData):
+class Class(LispData):
     def create(self, args, scope):
         obj = Object(self)
         self.value['constructor']([obj] + args, scope)
         return obj
 
 
-class Object(XenData):
+class Object(LispData):
     def __init__(self, class_):
         self.value = {}
         self.class_ = class_
