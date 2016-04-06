@@ -1,6 +1,6 @@
 (class [Just]
-       {:constructor (fn [self value] [set self [value] value])
-        :bind (fn [self fn] [fn (:value self)])})
+       {:constructor (fn [self value] [let [self:value] value])
+        :bind (fn [self fn] [fn self:value])})
 
 (class [Nothing] {:constructor (fn [self])
                   :bind (fn [self fn] [-> self])})

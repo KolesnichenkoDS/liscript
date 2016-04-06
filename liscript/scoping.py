@@ -24,3 +24,8 @@ class Scope:
             yield key
         for key in self.parent.keys():
             yield key
+
+
+class OperatorScope(Scope):
+    def __setitem__(self, key, value):
+        self.parent[key] = value

@@ -17,6 +17,7 @@ parse_string = pyparsec.regex(r'\"(\\.|[^"])*\"').to(eval).to(String)
 
 parse_val = pyparsec.oneof(
     parse_number,
+    pyparsec.lazy(lambda: parse_property),
     parse_atom,
     parse_string,
     pyparsec.lazy(lambda: parse_list),
@@ -46,14 +47,19 @@ parse_lazylist = pyparsec.seq(
     pyparsec.ignore(pyparsec.string(']'))
 ).to(LazyList) | (pyparsec.string('[') >> spaces0 >> pyparsec.string(']')).to(lambda _: LazyList([]))
 
-def get_item(atom):
-    def inner(args, scope):
-        if len(args) == 1:
-            return args[0][atom.value]
-        return args[0][atom.value]([args[0]] + args[1].value, scope)
-    return inner
+parse_key = (pyparsec.string(':') >> parse_atom).to(lambda a: Getter(a.value))
 
-parse_key = (pyparsec.string(':') >> parse_atom).to(get_item)
+def check_property_length(p):
+    if len(p) < 2:
+        raise ValueError
+    return p
+
+parse_property = pyparsec.seq(
+    parse_atom,
+    pyparsec.repeat(
+        pyparsec.ignore(pyparsec.string(':')) >> parse_atom
+    ).map(lambda x, y: [x] + y)
+).to(check_property_length).to(lambda l: Property([i.value for i in l]))
 
 parse_key_value = pyparsec.seq(
     pyparsec.string(':'),
