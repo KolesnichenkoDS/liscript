@@ -4,8 +4,6 @@ Lisp dialect written in Python
 ## Installation
 
 ```bash
-sudo pip install liscript
-# or #
 sudo pip3 install liscript
 ```
 
@@ -21,10 +19,11 @@ lirun <filename>  # run liscript code
 
 ```clojure
 ;; Atoms
-x   ; will return the value of variable `x'
+x         ; will return the value of variable `x'
 
-;; Getters
-:x  ; will return function that returns attribute `x' of its argument
+;; Getters & properties
+(:x obj)  ; will return property `x' of object (or dictionary) `obj'
+obj:x     ; the same as above
 
 ;; Numbers
 1
@@ -35,7 +34,7 @@ x   ; will return the value of variable `x'
 "Hello, world!"
 
 ;; Expressions (lists)
-(+ 1 2)   ; apply function `+' to 1 and 2; will return 3
+(+ 1 2)                 ; apply function `+' to 1 and 2; will return 3
 
 ;; Quoted lists
 '(1 (+ 1 1) (+ 1 1 1))  ; elements are evaluated when the list is initialized; will return '(1 2 3)
@@ -53,9 +52,12 @@ x   ; will return the value of variable `x'
 
 #### let, modify
 ```clojure
-> (let [x] 0)
+> (let [x d] 0 {:a 1 :b 2})
+> (let [d:c] 3)
 > x
   -> 0
+> d:c
+  -> 3
 > (modify [x] [+ 1])  ; same as `(let [x] (+ 1 x))'
 > x
   -> 1
@@ -70,11 +72,11 @@ x   ; will return the value of variable `x'
 
 #### class, new
 ```clojure
-> (class [Point] {:constructor (fn [self x y] [set self [x] x] [set self [y] y])})
+> (class [Point] {:constructor (fn [self x y] [let [self:x] x] [let [self:y] y])})
 > (let [p] (new Point 3 5))
-> (:x p)
+> p:x
   -> 3
-> (:y p)
+> p:y
   -> 5
 ```
 
